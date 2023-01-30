@@ -1,23 +1,29 @@
-import { useEffect, useState } from 'react';
-import { useFirestore } from '../../useFirestore';
-import { collection, getDocs } from "firebase/firestore";
-import type { DocumentData } from 'firebase/firestore'
+import { useEffect, useReducer } from 'react';
+import { reducer } from '../../state';
 import { LocationCard } from './LocationCard';
 import type { Location } from '../../types/sparkeats';
+import { readAll, usePersistence } from '../../persistence';
 
 export function LocationCards() {
-  const [locations, setLocations] = useState([] as DocumentData);
-  const db = useFirestore();
+  const [{ locations }, dispatch] = useReducer(reducer, {
+    locations: [],
+  } as any);
+  const db = usePersistence();
 
   useEffect(() => {
-    async function getLocations() {
-      const snapshot = await getDocs(collection(db, 'locations'));
-      const locations = snapshot.docs.map((doc) => doc.data());
+    async function setLocations() {
+      const locations = await readAll({
+        db,
+        collection: 'locations',
+      });
 
-      setLocations(locations);
+      dispatch({
+        type: 'set_locations',
+        data: locations,
+      });
     }
 
-    getLocations();
+    setLocations();
   }, []);
 
   return (

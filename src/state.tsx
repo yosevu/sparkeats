@@ -1,11 +1,10 @@
 import type { Location } from './types/sparkeats';
 
 export function reducer(
-  state: { location: Location; },
-  action: { type: string; data: any; }
+  state: { location?: Location; locations?: Location[] },
+  action: { type: string; data: any }
 ) {
-  console.log('debug reducer', state, action);
-  const location = state.location;
+  const { location } = state;
 
   switch (action.type) {
     case 'update_location': {
@@ -13,8 +12,20 @@ export function reducer(
         ...state,
         location: {
           ...location,
-          ...action.data
-        }
+          ...action.data,
+        },
+      };
+    }
+    case 'set_location': {
+      return {
+        ...state,
+        location: action.data,
+      };
+    }
+    case 'set_locations': {
+      return {
+        ...state,
+        locations: action.data,
       };
     }
   }

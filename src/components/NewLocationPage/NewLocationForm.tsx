@@ -1,31 +1,31 @@
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-
-import { doc, setDoc } from "firebase/firestore";
-import { useFirestore } from '../../useFirestore';
+import { reducer } from '../../state';
+import { write, usePersistence } from '../../persistence';
 
 export function NewLocationForm() {
   const navigate = useNavigate();
-  const db = useFirestore();
-
-  const [location, setLocation] = useState({
-    name: '',
-    city: '',
-    region: '',
-    country: '',
-    address: '',
-    phone: '',
-    url: '',
-    imageURL: '',
-    imageDescription: '',
+  const db = usePersistence();
+  const [{ location }, dispatch] = useReducer(reducer, {
+    location: {
+      name: '',
+      city: '',
+      region: '',
+      country: '',
+      address: '',
+      phone: '',
+      url: '',
+      imageURL: '',
+      imageDescription: '',
+    },
   });
 
   const handleChange = (field: HTMLInputElement) => {
-    setLocation((values) => ({
-      ...values,
-      [field.name]: field.value,
-    }));
+    dispatch({
+      type: 'update_location',
+      data: { [field.name]: field.value },
+    });
   };
 
   const handleSubmit = async (event: SyntheticEvent) => {
@@ -35,7 +35,12 @@ export function NewLocationForm() {
 
     const newLocation = { ...location, reviews: [], id };
 
-    await setDoc(doc(db, "locations", id), newLocation);
+    await write({
+      db,
+      collection: 'locations',
+      id,
+      payload: newLocation,
+    });
 
     navigate(`/locations/${newLocation.id}`, {
       replace: true,

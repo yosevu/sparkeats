@@ -12,7 +12,6 @@ import { NewReviewPage } from './components/NewReviewPage';
 
 window.__SPARKEATS_VERSION__ = import.meta.env['VITE_SPARKEATS_VERSION'];
 
-
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter basename={`${import.meta.env['BASE_URL']}`}>

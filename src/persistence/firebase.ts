@@ -1,7 +1,14 @@
 import React, { useContext } from 'react';
 // Firebase
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getFirestore,
+  getDoc,
+  getDocs,
+  setDoc,
+} from 'firebase/firestore';
 // import { getAnalytics } from "firebase/analytics";
 
 const {
@@ -25,11 +32,25 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app)
+const db = getFirestore(app);
 // const analytics = getAnalytics(app);
 
-const FirestoreContext = React.createContext(db);
+export const FirestoreContext = React.createContext(db);
 
 export const FirestoreProvider = FirestoreContext.Provider;
 
-export const useFirestore = () => useContext(FirestoreContext);
+export default {
+  setDoc: async (db: any, collection: string, id: string, payload: any) => {
+    await setDoc(doc(db, collection, id), payload);
+  },
+  getDoc: async (db: any, collection: string, id: string) => {
+    const snapshot = await getDoc(doc(db, collection, id));
+    return snapshot.data();
+  },
+  getDocs: async (db: any, coll: string) => {
+    const snapshot = await getDocs(collection(db, coll));
+    const payload = snapshot.docs.map((doc) => doc.data());
+
+    return payload;
+  },
+};
