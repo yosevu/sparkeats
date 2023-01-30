@@ -1,11 +1,29 @@
+import { useEffect, useState } from 'react';
+import { useFirestore } from '../../useFirestore';
+import { collection, getDocs } from "firebase/firestore";
+import type { DocumentData } from 'firebase/firestore'
 import { LocationCard } from './LocationCard';
-import type { Locations } from '../../types/sparkeats';
+import type { Location } from '../../types/sparkeats';
 
-export function LocationCards({ locations }: { locations: Locations }) {
+export function LocationCards() {
+  const [locations, setLocations] = useState([] as DocumentData);
+  const db = useFirestore();
+
+  useEffect(() => {
+    async function getLocations() {
+      const snapshot = await getDocs(collection(db, 'locations'));
+      const locations = snapshot.docs.map((doc) => doc.data());
+
+      setLocations(locations);
+    }
+
+    getLocations();
+  }, []);
+
   return (
     <section className="homepage__cards">
       <ul className="location-card__list">
-        {Object.values(locations).map((location) => (
+        {locations.map((location: Location) => (
           <LocationCard key={location.id} location={location} />
         ))}
       </ul>

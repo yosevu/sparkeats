@@ -2,8 +2,13 @@ import { SyntheticEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
+import { doc, setDoc } from "firebase/firestore";
+import { useFirestore } from '../../useFirestore';
+
 export function NewLocationForm() {
   const navigate = useNavigate();
+  const db = useFirestore();
+
   const [location, setLocation] = useState({
     name: '',
     city: '',
@@ -26,9 +31,11 @@ export function NewLocationForm() {
   const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
 
-    const newLocation = { ...location, reviews: [], id: uuidv4() };
+    const id = uuidv4();
 
-    console.log('TODO: Persist new location:', newLocation);
+    const newLocation = { ...location, reviews: [], id };
+
+    await setDoc(doc(db, "locations", id), newLocation);
 
     navigate(`/locations/${newLocation.id}`, {
       replace: true,

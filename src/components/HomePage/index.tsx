@@ -8,7 +8,7 @@ export function HomePage() {
   return (
     <main className="homepage">
       <HomeHeader />
-      <LocationCards locations={locations} />
+      <LocationCards />
     </main>
   );
 }

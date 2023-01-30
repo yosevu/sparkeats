@@ -1,6 +1,9 @@
+// React
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Sparkeats
 import { App } from './App';
 import { HomePage } from './components/HomePage';
 import { LocationPage } from './components/LocationPage';
@@ -8,6 +11,7 @@ import { NewLocationPage } from './components/NewLocationPage';
 import { NewReviewPage } from './components/NewReviewPage';
 
 window.__SPARKEATS_VERSION__ = import.meta.env['VITE_SPARKEATS_VERSION'];
+
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
