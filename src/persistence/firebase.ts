@@ -41,7 +41,7 @@ export const FirestoreProvider = FirestoreContext.Provider;
 
 export default {
   setDoc: async (db: any, collection: string, id: string, payload: any) => {
-    await setDoc(doc(db, collection, id), payload);
+    await setDoc(doc(db, collection, id), payload, { merge: true });
   },
   getDoc: async (db: any, collection: string, id: string) => {
     const snapshot = await getDoc(doc(db, collection, id));

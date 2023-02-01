@@ -1,10 +1,10 @@
-import type { Location } from './types/sparkeats';
+import type { Location, Review } from './types/sparkeats';
 
 export function reducer(
-  state: { location?: Location; locations?: Location[] },
+  state: { location?: Location; review?: Review; locations?: Location[] },
   action: { type: string; data: any }
 ) {
-  const { location } = state;
+  const { location, review } = state;
 
   switch (action.type) {
     case 'update_location': {
@@ -12,6 +12,15 @@ export function reducer(
         ...state,
         location: {
           ...location,
+          ...action.data,
+        },
+      };
+    }
+    case 'update_review': {
+      return {
+        ...state,
+        review: {
+          ...review,
           ...action.data,
         },
       };
