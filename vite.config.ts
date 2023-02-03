@@ -12,4 +12,4 @@ process.env.VITE_SPARKEATS_VERSION = latestCommitHash;
 export default defineConfig({
   base: '/sparkeats/',
   plugins: [react()]
-})
+});
